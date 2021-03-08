@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-pd.set_option('display.max_columns', 3)
+pd.set_option('display.max_columns', 4)
 pd.set_option('display.max_rows', 30)
 
 #activation funciton
@@ -112,6 +112,7 @@ class NN:
             out.append((sum, res))
         k = np.array(out[-1][1])
         df["result"] = k.tolist()
+        df["result %"] = df["result"].apply(lambda x: "EDIBLE" if x[0] < 0.5 else "POISONOUS")
         print(df)
         return out[-1][1]
 
