@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from numpy.ma import clip
 
 pd.set_option('display.max_columns', 4)
 pd.set_option('display.max_rows', 30)
@@ -16,6 +17,9 @@ tanh_prime = lambda x: 1.0 - x**2
 err_calc = lambda yp, yr: np.mean((yp - yr) ** 2)
 err_calc_prime = lambda yp, yr: (yp - yr)
 
+rectified = lambda x: np.clip(x > -1, 0.1, 1.0)
+rectified_prime = lambda x: np.clip(x > -1, 0.1, 1.0)
+
 #layer class
 class NN_layer:
 
@@ -26,6 +30,10 @@ class NN_layer:
         elif act_f == 'tanh':
             self.activation = tanh
             self.activation_prime = tanh_prime
+        elif act_f == 'relu':
+            self.activation = rectified
+            self.activation_prime = rectified_prime
+
         self.bias = np.random.rand(1,nnumber) *2 -1
         self.weights = np.random.rand(inputs,nnumber) *2 -1
 
@@ -121,7 +129,7 @@ class NN:
 nn = NN()
 nn.prepare_dataset()
 topology = [21, 8, 4, 2, 1]
-net = nn.create_nn(topology, "sigmoid")
+net = nn.create_nn(topology, "relu")
 
 errors=[]
 #train-epochs
