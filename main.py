@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+pd.set_option('display.max_columns', 3)
+pd.set_option('display.max_rows', 30)
+
 #activation funciton
 
 sigmoid = lambda  x: 1.0/(1.0 + np.exp(-x))
@@ -32,11 +35,8 @@ class NN:
     df = pd.read_csv('mushroom_dataset.csv')
     df = df.drop('veil-type', axis=1)
     df2 = df
-    n = 5000
-    p = 22
     y=[]
     dict={}
-    error=[]
 
     # transform to decimal value
     def __init__(self):
@@ -60,7 +60,7 @@ class NN:
             self.df[data] = self.df[data].apply(self.transfrom_to_binary, 1, args=[data])
 
     def read_dataset(self):
-        self.df2 = self.df.sample(200)
+        self.df2 = self.df.sample(100)
         self.y = self.df2["mushroom"].to_numpy()
         del self.df2["mushroom"]
 
@@ -110,27 +110,27 @@ class NN:
             sum = out[-1][1] @ nn[i].weights + nn[i].bias
             res = nn[i].activation(sum)
             out.append((sum, res))
-            k = np.array(out[-1][1])
-            df["result"] = k.tolist()
-            pd.set_option('display.max_columns', 3)
-            pd.set_option('display.max_rows', 50)
-            print(df)
+        k = np.array(out[-1][1])
+        df["result"] = k.tolist()
+        print(df)
         return out[-1][1]
 
 
+#creating the object
 nn = NN()
 nn.prepare_dataset()
 topology = [21, 8, 4, 2, 1]
 net = nn.create_nn(topology, "sigmoid")
 
 errors=[]
-for i in range(1000):
+#train-epochs
+for i in range(5000):
     nn.read_dataset()
     res = nn.train(net, nn.X_all, nn.y, 1)
     err = err_calc(res, nn.y)
     if i % 25 == 0:
         errors.append(err)
-    if err < 0.22:
+    if err < 0.1:
         break
 
 print("Iterations: ", i)
@@ -139,6 +139,6 @@ print("Min err: ", err)
 plt.plot(range(len(errors)), errors)
 plt.show()
 
-nn.read_dataset()
+#test
 nn.test(net)
 
