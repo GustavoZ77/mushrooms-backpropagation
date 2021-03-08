@@ -111,8 +111,8 @@ class NN:
             res = nn[i].activation(sum)
             out.append((sum, res))
         k = np.array(out[-1][1])
-        df["result"] = k.tolist()
-        df["result %"] = df["result"].apply(lambda x: "EDIBLE" if x[0] < 0.5 else "POISONOUS")
+        df["probability"] = k.tolist()
+        df["result"] = df["probability"].apply(lambda x: "EDIBLE" if x[0] < 0.5 else "POISONOUS")
         print(df)
         return out[-1][1]
 
@@ -127,7 +127,7 @@ errors=[]
 #train-epochs
 for i in range(5000):
     nn.read_dataset()
-    res = nn.train(net, nn.X_all, nn.y, 1)
+    res = nn.train(net, nn.X_all, nn.y, 0.05)
     err = err_calc(res, nn.y)
     if i % 25 == 0:
         errors.append(err)
