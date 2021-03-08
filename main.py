@@ -1,9 +1,8 @@
 import numpy as np
-import scipy as sc
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from sklearn.datasets import make_circles
+#activation funciton
 
 sigmoid = lambda  x: 1.0/(1.0 + np.exp(-x))
 sigmoid_prime = lambda  x: sigmoid(x)*(1.0-sigmoid(x))
@@ -14,6 +13,7 @@ tanh_prime = lambda x: 1.0 - x**2
 err_calc = lambda yp, yr: np.mean((yp - yr) ** 2)
 err_calc_prime = lambda yp, yr: (yp - yr)
 
+#layer class
 class NN_layer:
 
     def __init__(self, inputs, nnumber, act_f):
@@ -26,6 +26,7 @@ class NN_layer:
         self.bias = np.random.rand(1,nnumber) *2 -1
         self.weights = np.random.rand(inputs,nnumber) *2 -1
 
+#neural network class
 class NN:
 
     df = pd.read_csv('mushroom_dataset.csv')
@@ -129,12 +130,12 @@ class NN:
 nn = NN()
 nn.prepare_dataset()
 topology = [21, 8, 4, 2, 1]
-layer = nn.create_nn(topology, "sigmoid")
+net = nn.create_nn(topology, "sigmoid")
 
 errors=[]
 for i in range(1000):
     nn.read_dataset()
-    res = nn.train(layer, nn.X_all, nn.y, 1)
+    res = nn.train(net, nn.X_all, nn.y, 1)
     err = err_calc(res, nn.y)
     if i % 25 == 0:
         errors.append(err)
@@ -148,5 +149,5 @@ plt.plot(range(len(errors)), errors)
 plt.show()
 
 nn.read_dataset()
-nn.test(layer)
+nn.test(net)
 
