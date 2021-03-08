@@ -67,15 +67,6 @@ class NN:
         self.X_all = self.df2.values
         self.y = self.y[:, np.newaxis]
 
-        # self.y = self.df.iloc[3000:6000, 21].values
-        # self.X_all = self.df.iloc[3000:6000, 0:22].values
-        # self.y = self.y[:, np.newaxis]
-
-        # plt.scatter(self.X_all[:48488, 1], self.X_all[:48488, 21], c='salmon', marker='o', label='Comible')
-        # plt.scatter(self.X_all[8000:48489, 1],self. X_all[8000:48489, 21], c='skyblue', marker='X', label='Venenoso')
-        # plt.axis("equal")
-        # plt.show()
-
     def create_nn(self,topology, act_f):
 
         nn = []
